@@ -1,0 +1,163 @@
+:root {
+  --dash-animation-speed: 0.5s;
+  --dash-stagger-delay: 0.15s;
+  --dash-float-distance: 10px;
+  --dash-pulse-scale: 1.05;
+  --dash-3d-perspective: 1000px;
+  --dash-easing-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --dash-easing-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+/* Base Styles */
+.dash-animate {
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .dash-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ======================
+   FADE ANIMATIONS
+   ====================== */
+.dash-fade-in {
+  animation: dashFadeIn var(--dash-animation-speed) var(--dash-easing-smooth);
+}
+
+.dash-fade-out {
+  animation: dashFadeOut var(--dash-animation-speed) var(--dash-easing-smooth);
+}
+
+@keyframes dashFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dashFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ======================
+   SLIDE ANIMATIONS
+   ====================== */
+.dash-slide-in-left {
+  animation: dashSlideInLeft var(--dash-animation-speed) var(--dash-easing-bounce);
+}
+
+.dash-slide-out-right {
+  animation: dashSlideOutRight var(--dash-animation-speed) var(--dash-easing-smooth);
+}
+
+@keyframes dashSlideInLeft {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes dashSlideOutRight {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+}
+
+/* ======================
+   3D TRANSFORMATIONS
+   ====================== */
+.dash-3d-flip {
+  animation: dash3dFlip var(--dash-animation-speed) var(--dash-easing-smooth);
+  backface-visibility: visible;
+  perspective: var(--dash-3d-perspective);
+  transform-style: preserve-3d;
+}
+
+.dash-3d-rotate-hover {
+  transition: transform 0.6s var(--dash-easing-smooth);
+  transform-style: preserve-3d;
+}
+.dash-3d-rotate-hover:hover {
+  transform: rotateY(180deg);
+}
+
+@keyframes dash3dFlip {
+  from {
+    transform: perspective(var(--dash-3d-perspective)) rotateX(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(var(--dash-3d-perspective)) rotateX(0);
+    opacity: 1;
+  }
+}
+
+/* ======================
+   FLOATING & PULSE EFFECTS
+   ====================== */
+.dash-float {
+  animation: dashFloat 3s var(--dash-easing-smooth) infinite;
+}
+
+.dash-pulse {
+  animation: dashPulse 2s var(--dash-easing-bounce) infinite;
+}
+
+@keyframes dashFloat {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, var(--dash-float-distance), 0); }
+}
+
+@keyframes dashPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(var(--dash-pulse-scale)); }
+}
+
+/* ======================
+   STAGGERED ANIMATIONS
+   ====================== */
+.dash-stagger > * {
+  opacity: 0;
+  animation: dashFadeIn var(--dash-animation-speed) var(--dash-easing-smooth) forwards;
+}
+
+.dash-stagger > *:nth-child(1) { animation-delay: calc(var(--dash-stagger-delay) * 1); }
+.dash-stagger > *:nth-child(2) { animation-delay: calc(var(--dash-stagger-delay) * 2); }
+.dash-stagger > *:nth-child(3) { animation-delay: calc(var(--dash-stagger-delay) * 3); }
+/* Add more nth-child rules as needed */
+
+/* ======================
+   3D PANEL DRAGGING EFFECT
+   ====================== */
+.dash-drag-panel {
+  perspective: var(--dash-3d-perspective);
+  transform-style: preserve-3d;
+}
+
+.dash-drag-content {
+  transition: transform 0.3s var(--dash-easing-smooth);
+  transform-style: preserve-3d;
+}
+
+.dash-drag-panel:active .dash-drag-content,
+.dash-drag-panel.dragging .dash-drag-content {
+  transform: 
+    rotateX(var(--drag-rotate-x, 0deg))
+    rotateY(var(--drag-rotate-y, 0deg))
+    translate3d(var(--drag-translate-x, 0), var(--drag-translate-y, 0), 0);
+}
+
+/* JavaScript would update these custom properties */
